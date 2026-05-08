@@ -4,7 +4,8 @@ import { isEqual } from "../use-cases/utils";
 function reduceAttributes(variants: any[]) {
     return variants.reduce((acc, variant) => {
         const attrs = acc;
-        variant.attributes.forEach(
+        const variantAttributes = variant?.attributes ?? [];
+        variantAttributes.forEach(
             ({ attribute, value }: { attribute: any; value: any }) => {
                 const currentAttribute = attrs[attribute];
                 if (!currentAttribute) {
@@ -26,9 +27,10 @@ function reduceAttributes(variants: any[]) {
 }
 
 function attributesToObject({ attributes }: any) {
+    const safeAttributes = attributes ?? [];
     return Object.assign(
         {},
-        ...attributes.map(
+        ...safeAttributes.map(
             ({ attribute, value }: { attribute: any; value: any }) => ({
                 [attribute]: value,
             })
@@ -86,10 +88,7 @@ export const VariantSelector = ({
 
                 return (
                     <div key={attribute} className="w-40">
-                        <p className="my-3 text-text font-semibold">
-                            {attribute}
-                        </p>
-                        <div className="flex justify-between mb-5">
+                        <div className="flex justify-between">
                             {attr.map((value: string) => (
                                 <button
                                     key={value}
